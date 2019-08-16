@@ -1,0 +1,26 @@
+---
+
+- name: Create a directory if it does not exist
+  file:
+    path: "{{ keycloak_path }}/modules/system/layers/keycloak/org/postgresql/main"
+    state: directory
+  become_user: "{{ keycloak_user }}"
+
+- name: Template a file to postgresql
+  template:
+    src: module.xml
+    dest: "{{ keycloak_path }}/modules/system/layers/keycloak/org/postgresql/main"
+  become_user: "{{ keycloak_user }}"
+
+#- name: Download PostgreSQL driver
+#  get_url:
+#    url: "{{ postgresql_driver_download_url }}"
+#    dest: "{{ keycloak_path }}/modules/system/layers/keycloak/org/postgresql/main/{{ postgresql_driver }}"
+#    owner: "{{ keycloak_user }}"
+#    group: "{{ keycloak_group }}"
+
+- name: Template standalone.xml
+  template:
+     src: standalone.xml
+     dest: "{{ keycloak_path }}/standalone/configuration/"
+  become_user: "{{ keycloak_user }}"

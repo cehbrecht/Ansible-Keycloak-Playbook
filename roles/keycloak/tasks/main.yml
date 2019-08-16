@@ -1,0 +1,50 @@
+---
+
+- name: Add user
+  user:
+    name: "{{ keycloak_user }}"
+    state: present
+
+- name: Ensure group "somegroup" exists
+  group:
+    name: "{{ keycloak_group }}"
+    state: present
+
+- name: Download Keycloak
+  get_url:
+    url: "{{ keycloak_url }}"
+    dest: /tmp/keycloak.tar.gz
+
+- name: Create a directory if it does not exist
+  file:
+    path: /opt/keycloak
+    state: directory
+    mode: '0755'
+    owner: "{{ keycloak_user }}"
+    group: "{{ keycloak_group }}"
+
+- name: Extract Keycloak
+  unarchive:
+    src: /tmp/keycloak.tar.gz
+    dest: /opt/keycloak
+    list_files: yes
+  register: archive_contents
+  become_user: "{{ keycloak_user }}"
+
+- name: Create a symbolic link
+  file:
+    src: /opt/keycloak/{{ keycloak_version }}
+    dest: /opt/keycloak/current
+    owner: "{{ keycloak_user }}"
+    group: "{{ keycloak_group }}"
+    state: link
+
+
+#- name: Change file ownership, group and permissions
+#  file:
+#    path: /opt/keycloak/current/standalone
+#    state: directory
+#    mode: '700'
+
+
+- include: configure_database.yml

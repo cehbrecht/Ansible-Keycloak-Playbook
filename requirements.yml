@@ -1,0 +1,6 @@
+---
+
+- name: jasmin_roles
+  scm: git
+  src: git@breezy.badc.rl.ac.uk:cedadev/jasmin-ansible-roles.git
+  version: "master"
