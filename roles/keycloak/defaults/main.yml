@@ -1,4 +1,5 @@
 ---
 keycloak_version: keycloak-6.0.1
 keycloak_url: https://downloads.jboss.org/keycloak/6.0.1/{{ keycloak_version }}.tar.gz
+home: "{{lookup('env','HOME')}}"
 
