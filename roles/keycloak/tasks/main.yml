@@ -1,50 +1,62 @@
 ---
 
-- name: Add user
-  user:
-    name: "{{ keycloak_user }}"
-    state: present
-
-- name: Ensure group "somegroup" exists
-  group:
-    name: "{{ keycloak_group }}"
-    state: present
-
 - name: Download Keycloak
   get_url:
     url: "{{ keycloak_url }}"
-    dest: /tmp/keycloak.tar.gz
-
-- name: Create a directory if it does not exist
-  file:
-    path: /opt/keycloak
-    state: directory
-    mode: '0755'
-    owner: "{{ keycloak_user }}"
-    group: "{{ keycloak_group }}"
+    dest: "/home/{{keycloak_user}}/Downloads"
+  become_user: "{{keycloak_user}}"
 
 - name: Extract Keycloak
   unarchive:
-    src: /tmp/keycloak.tar.gz
-    dest: /opt/keycloak
+    src: "/home/{{keycloak_user}}/Downloads/keycloak-6.0.1.tar.gz"
+    dest: "/home/{{keycloak_user}}"
     list_files: yes
-  register: archive_contents
-  become_user: "{{ keycloak_user }}"
+  become_user: "{{keycloak_user}}"
 
-- name: Create a symbolic link
-  file:
-    src: /opt/keycloak/{{ keycloak_version }}
-    dest: /opt/keycloak/current
-    owner: "{{ keycloak_user }}"
-    group: "{{ keycloak_group }}"
-    state: link
+- name: Start Keycloak server
+  shell: "nohup /home/{{keycloak_user}}/keycloak-6.0.1/bin/standalone.sh &"
+  become_user: "{{keycloak_user}}"
 
+- name: Sleep for 30 seconds to allow server to boot up
+  wait_for:
+    timeout: 40
+  delegate_to: localhost
 
-#- name: Change file ownership, group and permissions
-#  file:
-#    path: /opt/keycloak/current/standalone
-#    state: directory
-#    mode: '700'
+- name: Create an admin user
+  command: "/home/{{keycloak_user}}/keycloak-6.0.1/bin/add-user-keycloak.sh -r master -u admin -p admin"
+  become_user: "{{keycloak_user}}"
 
+- name: Restart server to allow changes
+  command: "/home/{{keycloak_user}}/keycloak-6.0.1/bin/jboss-cli.sh --connect command=:reload"
+  become_user: "{{keycloak_user}}"
 
-- include: configure_database.yml
+- name: Connect to the server
+  command: "/home/{{keycloak_user}}/keycloak-6.0.1/bin/kcadm.sh config credentials --server http://localhost:8080/auth --realm master --user admin --password admin"
+  become_user: "{{keycloak_user}}"
+
+- name: Create a default client
+  command: "/home/{{keycloak_user}}/keycloak-6.0.1/bin/kcadm.sh create clients -r master -s clientId=test -s enabled=true"
+  become_user: "{{keycloak_user}}"
+
+- name: Create or update Keycloak client
+  local_action:
+    module: keycloak_client
+    auth_client_id: admin-cli
+    auth_keycloak_url: http://localhost:8080/auth
+    auth_realm: master
+    auth_username: admin
+    auth_password: admin
+    client_id: test
+    state: present
+    enabled: True
+    redirect_uris:
+      - http://localhost:8000/callback/*
+
+- name: Create a user to test with
+  command: "/home/{{keycloak_user}}/keycloak-6.0.1/bin/kcadm.sh create users -r master -s username=testuser -s enabled=true -s email=test@mail.com -s firstName=First -s lastName=Last"
+  become_user: "{{keycloak_user}}"
+  
+
+- name: Set/Reset user password
+  command: "/home/{{keycloak_user}}/keycloak-6.0.1/bin/kcadm.sh set-password -r master --username testuser --new-password pass -t=false"
+  become_user: "{{keycloak_user}}"

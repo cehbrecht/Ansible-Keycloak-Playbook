@@ -1,8 +1,4 @@
 ---
 keycloak_version: keycloak-6.0.1
-keycloak_url: https://downloads.jboss.org/keycloak/{{ keycloak_version }}/keycloak-{{ keycloak_version }}.tar.gz
-keycloak_user: keycloak
-keycloak_group: keycloak
-keycloak_path: /opt/keycloak/current
-postgresql_driver: postgresql-9.4.1212.jar
-postgresql_driver_download_url: https://jdbc.postgresql.org/download/postgresql-42.2.6.jar
+keycloak_url: https://downloads.jboss.org/keycloak/6.0.1/{{ keycloak_version }}.tar.gz
+
