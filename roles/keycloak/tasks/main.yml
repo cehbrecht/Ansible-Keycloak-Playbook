@@ -3,19 +3,20 @@
 - name: Download Keycloak
   get_url:
     url: "{{ keycloak_url }}"
-    dest: "{{home}}/Downloads"
-  become_user: "{{keycloak_user}}"
+    dest: "/tmp/keycloak-6.0.1.tar.gz"
 
 - name: Extract Keycloak
   unarchive:
-    src: "{{home}}/Downloads/keycloak-6.0.1.tar.gz"
+    src: "/tmp/keycloak-6.0.1.tar.gz"
     dest: "{{home}}"
     list_files: yes
-  become_user: "{{keycloak_user}}"
+
+- name: Set keycloak home fact
+  set_fact:
+    keycloak_home: "{{home}}/keycloak-6.0.1"
 
 - name: Start Keycloak server
-  shell: "nohup {{home}}/keycloak-6.0.1/bin/standalone.sh &"
-  become_user: "{{keycloak_user}}"
+  shell: "nohup {{keycloak_home}}/bin/standalone.sh &"
 
 - name: Sleep for 30 seconds to allow server to boot up
   wait_for:
@@ -23,20 +24,16 @@
   delegate_to: localhost
 
 - name: Create an admin user
-  command: "{{home}}/keycloak-6.0.1/bin/add-user-keycloak.sh -r master -u admin -p admin"
-  become_user: "{{keycloak_user}}"
+  command: "{{keycloak_home}}/bin/add-user-keycloak.sh -r master -u admin -p admin"
 
 - name: Restart server to allow changes
-  command: "{{home}}/keycloak-6.0.1/bin/jboss-cli.sh --connect command=:reload"
-  become_user: "{{keycloak_user}}"
+  command: "{{keycloak_home}}/bin/jboss-cli.sh --connect command=:reload"
 
 - name: Connect to the server
-  command: "{{home}}/keycloak-6.0.1/bin/kcadm.sh config credentials --server http://localhost:8080/auth --realm master --user admin --password admin"
-  become_user: "{{keycloak_user}}"
+  command: "{{keycloak_home}}/bin/kcadm.sh config credentials --server http://localhost:8080/auth --realm master --user admin --password admin"
 
 - name: Create a default client
-  command: "{{home}}/keycloak-6.0.1/bin/kcadm.sh create clients -r master -s clientId=test -s enabled=true"
-  become_user: "{{keycloak_user}}"
+  command: "{{keycloak_home}}/bin/kcadm.sh create clients -r master -s clientId=test -s enabled=true"
 
 - name: Create or update Keycloak client
   local_action:
@@ -53,10 +50,8 @@
       - http://localhost:8000/callback/*
 
 - name: Create a user to test with
-  command: "{{home}}/keycloak-6.0.1/bin/kcadm.sh create users -r master -s username=testuser -s enabled=true -s email=test@mail.com -s firstName=First -s lastName=Last"
-  become_user: "{{keycloak_user}}"
+  command: "{{keycloak_home}}/bin/kcadm.sh create users -r master -s username=testuser -s enabled=true -s email=test@mail.com -s firstName=First -s lastName=Last"
   
 
 - name: Set/Reset user password
-  command: "{{home}}/keycloak-6.0.1/bin/kcadm.sh set-password -r master --username testuser --new-password pass -t=false"
-  become_user: "{{keycloak_user}}"
+  command: "{{keycloak_home}}/bin/kcadm.sh set-password -r master --username testuser --new-password pass -t=false"

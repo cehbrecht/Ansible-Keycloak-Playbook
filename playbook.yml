@@ -2,7 +2,5 @@
 
 - name: keycloak
   hosts: localhost
-  remote_user: root
   roles:
     - keycloak
-  become: yes
