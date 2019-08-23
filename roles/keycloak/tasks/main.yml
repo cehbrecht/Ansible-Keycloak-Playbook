@@ -18,9 +18,9 @@
 - name: Start Keycloak server
   shell: "nohup {{keycloak_home}}/bin/standalone.sh &"
 
-- name: Sleep for 30 seconds to allow server to boot up
+- name: Sleep for 60 seconds to allow server to boot up
   wait_for:
-    timeout: 40
+    timeout: 60
   delegate_to: localhost
 
 - name: Create an admin user
