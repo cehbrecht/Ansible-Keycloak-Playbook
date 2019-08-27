@@ -1,1 +1,16 @@
-.git
+# custom configuration
+custom.yml
+etc/custom*.yml
+
+# external roles from ansible-galaxy
+# roles/xyz
+
+# temp files
+*.retry
+*.log
+
+# Vagrant
+.vagrant
+
+# Tests
+tests/test.sh

@@ -8,6 +8,7 @@
 - name: Extract Keycloak
   unarchive:
     src: "/tmp/keycloak-6.0.1.tar.gz"
+    remote_src: yes
     dest: "{{home}}"
     list_files: yes
 
@@ -21,7 +22,7 @@
 - name: Sleep for 60 seconds to allow server to boot up
   wait_for:
     timeout: 60
-  delegate_to: localhost
+  # delegate_to: localhost
 
 - name: Create an admin user
   command: "{{keycloak_home}}/bin/add-user-keycloak.sh -r master -u admin -p admin"
@@ -36,8 +37,7 @@
   command: "{{keycloak_home}}/bin/kcadm.sh create clients -r master -s clientId=test -s enabled=true"
 
 - name: Create or update Keycloak client
-  local_action:
-    module: keycloak_client
+  keycloak_client:
     auth_client_id: admin-cli
     auth_keycloak_url: http://localhost:8080/auth
     auth_realm: master
@@ -51,7 +51,7 @@
 
 - name: Create a user to test with
   command: "{{keycloak_home}}/bin/kcadm.sh create users -r master -s username=testuser -s enabled=true -s email=test@mail.com -s firstName=First -s lastName=Last"
-  
+
 
 - name: Set/Reset user password
   command: "{{keycloak_home}}/bin/kcadm.sh set-password -r master --username testuser --new-password pass -t=false"

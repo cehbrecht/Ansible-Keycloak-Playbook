@@ -1,5 +1,4 @@
 ---
 keycloak_version: keycloak-6.0.1
 keycloak_url: https://downloads.jboss.org/keycloak/6.0.1/{{ keycloak_version }}.zip
-home: "{{lookup('env','HOME')}}"
-
+home: "/opt"

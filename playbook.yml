@@ -1,6 +1,8 @@
 ---
 
 - name: keycloak
-  hosts: localhost
+  hosts: all
+  become: true
   roles:
+    - common
     - keycloak
