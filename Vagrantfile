@@ -24,7 +24,8 @@ Vagrant.configure("2") do |config|
     # keycloak.vm.box = "bento/centos-6"
     # keycloak.vm.box = "bento/fedora-27"
     keycloak.vm.hostname = "keycloak.local"
-    keycloak.vm.network "private_network", ip: "192.168.128.100"
+    # keycloak.vm.network "private_network", ip: "192.168.128.100"
+    keycloak.vm.network "forwarded_port", guest: 8080, host: 8080
     keycloak.vm.provision 'ansible' do |ansible|
       ansible.playbook = 'playbook.yml'
       ansible.verbose = "v"

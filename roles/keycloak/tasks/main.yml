@@ -9,7 +9,7 @@
     state: link
 
 - name: Start Keycloak server
-  shell: "nohup {{keycloak_home}}/bin/standalone.sh -Djboss.bind.address={{ keycloak_bind_address }} &"
+  shell: "nohup {{keycloak_home}}/bin/standalone.sh -b={{ keycloak_bind_address }} -bmanagement={{ keycloak_bind_address }} &"
 
 - name: Sleep for 60 seconds to allow server to boot up
   wait_for:
