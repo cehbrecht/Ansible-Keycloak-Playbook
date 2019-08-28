@@ -1,7 +1,9 @@
 ---
 
+# miniconda
+# ---------
+- src: andrewrothstein.miniconda
+
 # keycloak
 # --------
-# - src: andrewrothstein.keycloak
-- src: https://github.com/andrewrothstein/ansible-keycloak/archive/v2.0.0.tar.gz
-  name: andrewrothstein.keycloak
+- src: andrewrothstein.keycloak

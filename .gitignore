@@ -6,6 +6,8 @@ etc/custom*.yml
 roles/andrewrothstein.keycloak/
 roles/andrewrothstein.openjdk/
 roles/andrewrothstein.unarchive-deps/
+roles/andrewrothstein.bash/
+roles/andrewrothstein.miniconda/
 
 # temp files
 *.retry
