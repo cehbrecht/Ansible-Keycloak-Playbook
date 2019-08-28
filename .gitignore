@@ -3,7 +3,9 @@ custom.yml
 etc/custom*.yml
 
 # external roles from ansible-galaxy
-# roles/xyz
+roles/andrewrothstein.keycloak/
+roles/andrewrothstein.openjdk/
+roles/andrewrothstein.unarchive-deps/
 
 # temp files
 *.retry
