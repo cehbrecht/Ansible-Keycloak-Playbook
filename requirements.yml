@@ -1,9 +1,5 @@
 ---
 
-# miniconda
-# ---------
-- src: andrewrothstein.miniconda
-
 # keycloak
 # --------
 - src: andrewrothstein.keycloak

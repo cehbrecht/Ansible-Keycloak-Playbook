@@ -5,6 +5,5 @@
   become: yes
   become_user: root
   roles:
-    - andrewrothstein.miniconda
     - andrewrothstein.keycloak
     - keycloak
