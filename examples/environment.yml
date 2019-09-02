@@ -1,4 +1,4 @@
-name: oauth_demo
+name: keycloak_demo
 channels:
 - defaults
 dependencies:
