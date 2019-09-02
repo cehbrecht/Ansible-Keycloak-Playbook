@@ -1,0 +1,10 @@
+---
+
+- name: Connect to the server
+  command: "{{keycloak_home}}/bin/kcadm.sh config credentials --server http://localhost:8080/auth --realm master --user admin --password admin"
+
+- name: Create demo realm
+  command: "{{keycloak_home}}/bin/kcadm.sh create realms -s realm=demo -s enabled=true"
+
+- name: Create twitcher client
+  command: "{{keycloak_home}}/bin/kcadm.sh create clients -r demo -s clientId=twitcher -s enabled=true -s serviceAccountsEnabled=true"

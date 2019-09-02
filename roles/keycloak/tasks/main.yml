@@ -2,4 +2,6 @@
 
 - include_tasks: common-config.yml
 
-- include_tasks: django-demo-config.yml
+# - include_tasks: django-demo-config.yml
+
+# - include_tasks: twitcher-demo-config.yml
