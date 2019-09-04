@@ -1,0 +1,10 @@
+---
+
+- name: Connect to the server
+  command: "{{keycloak_home}}/bin/kcadm.sh config credentials --server http://localhost:8080/auth --realm master --user admin --password admin"
+
+- name: Create demo realm
+  command: "{{keycloak_home}}/bin/kcadm.sh create realms -s realm=demo -s enabled=true"
+
+- name: Create client with client_credentials grant type
+  command: "{{keycloak_home}}/bin/kcadm.sh create clients -r demo -s clientId=demo -s enabled=true -s serviceAccountsEnabled=true -s clientAuthenticatorType=client-secret -s secret=c083d72c-a262-40b1-ad51-326f6977d74b"
