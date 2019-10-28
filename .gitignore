@@ -8,6 +8,7 @@ roles/andrewrothstein.openjdk/
 roles/andrewrothstein.unarchive-deps/
 roles/andrewrothstein.bash/
 roles/andrewrothstein.miniconda/
+roles/andrewrothstein.alpine-glibc-shim
 
 # temp files
 *.retry
